@@ -1,20 +1,20 @@
 package com.demo.spring;
 
-import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-import org.springframework.orm.jpa.vendor.Database;
-import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 
 @Configuration
+
 public class AppConfig {
 
 	@Bean
+	@Profile("dev")
 	public DriverManagerDataSource dataSource() {
 		DriverManagerDataSource ds= new DriverManagerDataSource();
 		ds.setDriverClassName("org.mariadb.jdbc.Driver");
@@ -23,8 +23,17 @@ public class AppConfig {
 		ds.setPassword("root");
 		return ds;
 	}
+	/*
+	@Bean
+	@ConfigurationProperties("app.datasource")
+	@Profile("prod")
+	public DataSource ds() {
+	    return DataSourceBuilder.create().build();
+	}
 	
+	*/
 	
+	/*
 	@Bean
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource ds) {
 		LocalContainerEntityManagerFactoryBean lb=new LocalContainerEntityManagerFactoryBean();
@@ -45,5 +54,6 @@ public class AppConfig {
 		tx.setEntityManagerFactory(emf);
 		return tx;
 	}
+	*/
 	
 }
