@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("app")
 public class TestController {
 
-	@RequestMapping(path="/info",method = RequestMethod.GET)
+	@RequestMapping(path="/info",method = RequestMethod.GET,produces = "application/json")
 	public String info() {
-		return "This is a demo rest service";
+		return "{\"message\":\"this is info\"}";
 	}
 }
