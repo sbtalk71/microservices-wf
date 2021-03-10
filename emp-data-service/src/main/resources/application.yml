@@ -3,13 +3,39 @@ server:
 
 spring:
   profiles:
-    active: prod
+    active: default
 
+    
+  jpa:
+    show_sql: true
+    
+app:
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    jdbcUrl: jdbc:mariadb://localhost:3306/springdb
+    username: root
+    password: root   
+ 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+        
+---    
+spring:
+  profiles: dev
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
     url: jdbc:mariadb://localhost:3306/springdb
     username: root
     password: root
     
-  jpa:
-    show_sql: true
+---
+spring:
+  profiles: testing
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://localhost:3306/springdb
+    username: root
+    password: root

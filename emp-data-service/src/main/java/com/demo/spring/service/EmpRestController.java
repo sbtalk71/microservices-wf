@@ -2,16 +2,23 @@ package com.demo.spring.service;
 
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.demo.spring.entity.Emp;
@@ -30,7 +37,7 @@ public class EmpRestController {
 		if(op.isPresent()) {
 			return ResponseEntity.ok(op.get());
 		}else {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+			throw new RuntimeException("Emp not Found");
 		}
 	}
 	
@@ -40,12 +47,38 @@ public class EmpRestController {
 	}
 	
 	@PostMapping(path="/emp/save",consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.TEXT_PLAIN_VALUE)
-	public ResponseEntity<String> saveEmp(@RequestBody Emp e){
+	public ResponseEntity<String> saveEmp(@RequestBody @Valid Emp e){
 		if(repo.existsById(e.getEmpId())) {
 			return ResponseEntity.ok("Emp already exists with the given ID : "+e.getEmpId());
 		}else {
 		repo.save(e);
 		return ResponseEntity.ok("Emp saved with the given ID : "+e.getEmpId());
 		}
+	}
+	
+	@PutMapping(path="/emp/update",consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.TEXT_PLAIN_VALUE)
+	public ResponseEntity<String> updateEmp(@RequestBody @Valid Emp e){
+		if(!repo.existsById(e.getEmpId())) {
+			return ResponseEntity.ok("Emp does not exist with the given ID : "+e.getEmpId());
+		}else {
+		repo.save(e);
+		return ResponseEntity.ok("Emp updated with the given ID : "+e.getEmpId());
+		}
+		
+	}
+	
+	@DeleteMapping(path="/emp/delete",produces = MediaType.TEXT_PLAIN_VALUE)
+		public ResponseEntity<String> deleteEmp(@RequestParam("id") int id){
+		if(repo.existsById(id)) {
+			repo.deleteById(id);
+			return ResponseEntity.ok("Emp deleted with the given ID : "+id);
+		}else {
+			return ResponseEntity.ok("Emp not found with the given ID : "+id);
+		}
+	}
+	
+	@ExceptionHandler(Exception.class)
+	public ResponseEntity<String> handleEmpNotFound(RuntimeException e){
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 	}
 }
