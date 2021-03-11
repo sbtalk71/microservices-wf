@@ -4,11 +4,15 @@ server:
 spring:
   profiles:
     active: default
-
-    
+  application:
+     name: emp-data-service
   jpa:
     show_sql: true
-    
+eureka:
+  client:
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
 app:
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
