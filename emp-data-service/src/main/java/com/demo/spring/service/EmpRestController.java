@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.demo.spring.ResponseMessage;
 import com.demo.spring.entity.Emp;
 import com.demo.spring.repo.EmpRepository;
 
@@ -31,7 +32,7 @@ public class EmpRestController {
 	private EmpRepository repo;
 	
 	//@RequestMapping(path="/emp/find/{eid}",method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
-	@GetMapping(path="/emp/find/{eid}",produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(path="/emp/find/{eid}",produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
 	public ResponseEntity findEmpById(@PathVariable("eid") int id) {
 		Optional<Emp> op=repo.findById(id);
 		if(op.isPresent()) {
@@ -47,22 +48,24 @@ public class EmpRestController {
 	}
 	
 	@PostMapping(path="/emp/save",consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.TEXT_PLAIN_VALUE)
-	public ResponseEntity<String> saveEmp(@RequestBody @Valid Emp e){
+	public ResponseEntity<ResponseMessage> saveEmp(@RequestBody @Valid Emp e){
 		if(repo.existsById(e.getEmpId())) {
-			return ResponseEntity.ok("Emp already exists with the given ID : "+e.getEmpId());
+			return ResponseEntity.ok(new ResponseMessage("EMP Exists","XXX"));
 		}else {
 		repo.save(e);
-		return ResponseEntity.ok("Emp saved with the given ID : "+e.getEmpId());
+		return ResponseEntity.ok(new ResponseMessage("EMP Created","201"));
 		}
 	}
 	
-	@PutMapping(path="/emp/update",consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.TEXT_PLAIN_VALUE)
-	public ResponseEntity<String> updateEmp(@RequestBody @Valid Emp e){
+	@PutMapping(path="/emp/update",consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<ResponseMessage> updateEmp(@RequestBody @Valid Emp e){
+		
+		
 		if(!repo.existsById(e.getEmpId())) {
-			return ResponseEntity.ok("Emp does not exist with the given ID : "+e.getEmpId());
+			return ResponseEntity.ok(new ResponseMessage("EMP NOT Found","404"));
 		}else {
 		repo.save(e);
-		return ResponseEntity.ok("Emp updated with the given ID : "+e.getEmpId());
+		return ResponseEntity.ok(new ResponseMessage("EMP updated","200"));
 		}
 		
 	}
@@ -78,7 +81,7 @@ public class EmpRestController {
 	}
 	
 	@ExceptionHandler(Exception.class)
-	public ResponseEntity<String> handleEmpNotFound(RuntimeException e){
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+	public ResponseEntity<ResponseMessage> handleEmpNotFound(RuntimeException e){
+		return ResponseEntity.ok(new ResponseMessage("EMP NOT Found","404"));
 	}
 }

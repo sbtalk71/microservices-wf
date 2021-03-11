@@ -15,25 +15,20 @@ public class RestClient2 {
 		
 		RestTemplate rt= new RestTemplate();
 		
-		//ResponseEntity<String> resp= rt.getForEntity("http://localhost:8181/emp/find/104",String.class);
-		
-		//System.out.println(resp.getBody());
-		
-		//----------------------
-		
+				
 		HttpHeaders headers=new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("Content-Type", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("Accept", MediaType.TEXT_PLAIN_VALUE);
 		
 		
-		HttpEntity reqEntity=new HttpEntity<>(headers);
+		Emp emp= new Emp(114, "Simran", "Noida", 78000);
 		
-		ResponseEntity<String> response2=rt.exchange("http://localhost:8181/emp/find/104", HttpMethod.GET, reqEntity, String.class);
+		HttpEntity reqEntity=new HttpEntity<>(emp,headers);
+		
+				
+		ResponseEntity<String> response3=rt.exchange("http://localhost:8181/emp/save", HttpMethod.POST, reqEntity,String.class);
 
-		System.out.println(response2.getBody());
-		
-		ResponseEntity<Emp> response3=rt.exchange("http://localhost:8181/emp/find/104", HttpMethod.GET, reqEntity, Emp.class);
-
-		System.out.println(response3.getBody().getName());
+		System.out.println(response3.getBody());
 	}
 
 }
