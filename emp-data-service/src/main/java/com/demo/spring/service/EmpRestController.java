@@ -2,6 +2,7 @@ package com.demo.spring.service;
 
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,5 +84,11 @@ public class EmpRestController {
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<ResponseMessage> handleEmpNotFound(RuntimeException e){
 		return ResponseEntity.ok(new ResponseMessage("EMP NOT Found","404"));
+	}
+	
+	
+	@GetMapping("/testload")
+	public String testLoad(HttpServletRequest request) {
+		return ""+request.getLocalAddr()+":"+request.getLocalPort();
 	}
 }

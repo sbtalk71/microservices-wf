@@ -1,7 +1,9 @@
 server:
   port: 9090
-  
+debug: true
 spring:  application:    name: hr-app
     
 eureka:  client:    register-with-eureka: true
-    service-url:      defaultZone: http://localhost:8761/eureka/  
+    service-url:      defaultZone: http://localhost:8761/eureka/
+      management:  endpoints:    web:      exposure:        include: "*"
+  
