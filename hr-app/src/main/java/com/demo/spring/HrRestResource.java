@@ -24,6 +24,7 @@ public class HrRestResource {
 	
 	
 	@GetMapping(path="/hr/details", produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
+	
 	public ResponseEntity<String> getEmpDetails(@RequestParam("id") int id,@RequestHeader("Accept") String accept){
 		HttpHeaders headers=new HttpHeaders();
 		headers.set("Accept", accept);
@@ -35,6 +36,7 @@ public class HrRestResource {
 	}
 	
 	@GetMapping(path="/hr/all", produces = {MediaType.APPLICATION_JSON_VALUE})
+	@HystrixCommand(fallbackMethod = "fallbackGetAllEmps")
 	public ResponseEntity<String> getAllEmps(){
 		HttpHeaders headers=new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -59,5 +61,9 @@ public class HrRestResource {
 		
 		public ResponseEntity fallbackTestServer() {
 			return ResponseEntity.ok("fallback message: Service unavailable try after sometime..");
+		}
+		
+		public ResponseEntity<String> fallbackGetAllEmps() {
+			return ResponseEntity.ok("fallbackGetAllEmps: Service unavailable try after sometime..");
 		}
 }
