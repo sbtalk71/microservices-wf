@@ -1,7 +1,10 @@
 package com.demo.spring;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -37,13 +40,14 @@ public class HrRestResource {
 	
 	@GetMapping(path="/hr/all", produces = {MediaType.APPLICATION_JSON_VALUE})
 	@HystrixCommand(fallbackMethod = "fallbackGetAllEmps")
-	public ResponseEntity<String> getAllEmps(){
+	public ResponseEntity<List<String>> getAllEmps(){
 		HttpHeaders headers=new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 		
 		HttpEntity reqEntity=new HttpEntity<>(headers);
 		
-		return rt.exchange("http://emp-data-service/emp", HttpMethod.GET, reqEntity, String.class);
+		return rt.exchange("http://emp-data-service/emp", HttpMethod.GET, reqEntity,new ParameterizedTypeReference<List<String>>(){
+		});
 
 	}
 	
