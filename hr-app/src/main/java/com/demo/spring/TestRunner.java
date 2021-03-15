@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 import com.demo.spring.feign.HrRestFeignClient;
 
-@Component
+//@Component
 public class TestRunner implements CommandLineRunner {
 
 	@Autowired
