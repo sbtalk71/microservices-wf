@@ -1,0 +1,12 @@
+server:
+  port: 9191
+  
+example:
+    baseUrl: http://localhost:9090
+    oauth2:
+        client:
+            grant-type: client_credentials
+            clientId: shantanu
+            clientSecret: welcome1
+            accessTokenUri: http://localhost:8080/oauth/token
+            scope: resource-server-read
